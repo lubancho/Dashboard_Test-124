@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Давидян и партнёры. Адаптация и увольнение</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+<style>
+/* Layout: слева навигация по блокам задания, справа выбранный блок от общего (итог) к частному (раскрывающиеся детали). На телефоне навигация уходит наверх. */
+:root{
+  --bg:#f3f5f7; --surface:#ffffff; --surface2:#e9edf1; --fg:#17212b; --muted:#5a6773; --line:#d5dce3;
+  --accent:#1f4fd8; --on-accent:#ffffff; --accent-soft:#e3eafc;
+  --ok:#16794c; --ok-soft:#dff3e9; --warn:#9a5b00; --warn-soft:#fbecd0; --bad:#b3261e; --bad-soft:#fbe0dd;
+  --f-display:'Source Serif 4',Georgia,serif; --f-body:'IBM Plex Sans',system-ui,sans-serif; --f-mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#10161c; --surface:#18212a; --surface2:#212c37; --fg:#e6ebf0; --muted:#97a4b1; --line:#2b3745;
+  --accent:#7fa2ff; --on-accent:#0b1220; --accent-soft:#1e2d52;
+  --ok:#5cd39a; --ok-soft:#173a2b; --warn:#f0b955; --warn-soft:#3b2d12; --bad:#ff8a80; --bad-soft:#44201d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10161c; --surface:#18212a; --surface2:#212c37; --fg:#e6ebf0; --muted:#97a4b1; --line:#2b3745;
+  --accent:#7fa2ff; --on-accent:#0b1220; --accent-soft:#1e2d52;
+  --ok:#5cd39a; --ok-soft:#173a2b; --warn:#f0b955; --warn-soft:#3b2d12; --bad:#ff8a80; --bad-soft:#44201d; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{color-scheme:light}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;margin:0;text-wrap:balance}
+h1{font-size:26px;line-height:1.2} h2{font-size:17px} h3{font-size:15px}
+p{margin:0}
+a{color:var(--accent)}
+button{font:inherit;color:inherit;cursor:pointer}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.muted{color:var(--muted);font-size:13px}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.pill{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12px;font-weight:500;white-space:nowrap}
+.ok{background:var(--ok-soft);color:var(--ok)} .warn{background:var(--warn-soft);color:var(--warn)} .bad{background:var(--bad-soft);color:var(--bad)} .info{background:var(--accent-soft);color:var(--accent)} .idle{background:var(--surface2);color:var(--muted)}
+
+.app{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:100vh}
+.side{background:var(--surface);border-right:1px solid var(--line);padding:20px 12px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto}
+.brand{padding:0 8px;display:flex;flex-direction:column;gap:2px}
+.brand b{font-family:var(--f-display);font-size:16px;line-height:1.25}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;justify-content:space-between;align-items:center;gap:8px;text-decoration:none;color:var(--fg);padding:8px 10px;border-radius:6px;border-left:3px solid transparent}
+.nav a:hover{background:var(--surface2)}
+.nav a[aria-current="page"]{background:var(--accent-soft);border-left-color:var(--accent);font-weight:600}
+.nav small{font-family:var(--f-mono);color:var(--muted);font-size:11px}
+.badge{background:var(--bad-soft);color:var(--bad);border-radius:999px;font-size:11px;font-weight:600;padding:0 7px}
+.main{padding:28px 32px 56px;max-width:900px;width:100%;min-width:0}
+.view{display:flex;flex-direction:column;gap:16px}
+.head{display:flex;flex-direction:column;gap:6px;padding-bottom:4px}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;min-width:0}
+.pad{padding:14px 16px}
+.lead{border-left:4px solid var(--accent)}
+.lead.bad{border-left-color:var(--bad)}
+
+/* раскрывающиеся списки */
+details.acc{border-bottom:1px solid var(--line)}
+details.acc:last-child{border-bottom:0}
+details.acc>summary{list-style:none;cursor:pointer;padding:11px 14px;display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+details.acc>summary::-webkit-details-marker{display:none}
+details.acc>summary:hover{background:var(--surface2)}
+details.acc>summary .t{flex:1;min-width:0}
+details.acc>summary::after{content:"›";color:var(--muted);font-size:18px;line-height:1.2;transition:transform .15s}
+details.acc[open]>summary::after{transform:rotate(90deg)}
+.body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.body .go{font-size:13px;font-weight:500}
+.quote{border-left:3px solid var(--line);padding-left:10px;color:var(--muted)}
+pre{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--f-body);font-size:14px;line-height:1.55;background:var(--surface2);border-radius:6px;padding:12px}
+.copy{align-self:flex-start;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:6px;padding:4px 12px;font-size:13px;font-weight:500}
+
+/* этапы */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px}
+.step{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--line);border-radius:6px;padding:8px 10px;display:flex;flex-direction:column;gap:4px;font-size:13px}
+.step.ok{border-top-color:var(--ok)} .step.warn{border-top-color:var(--warn)}
+
+/* таблицы и списки */
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{font-size:12px;font-weight:500;color:var(--muted);background:var(--surface2)}
+tr:last-child td{border-bottom:0}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.card{padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:3px;font-size:14px}
+.task{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;border-bottom:1px solid var(--line)}
+.task:last-child{border-bottom:0}
+.task input{margin-top:4px;width:16px;height:16px;flex:none}
+.task label{flex:1;min-width:0;cursor:pointer}
+.task.done label{text-decoration:line-through;color:var(--muted)}
+.who{font-size:12px;color:var(--muted)}
+
+/* дерево папок */
+.tree{list-style:none;margin:0;padding:0;font-size:14px}
+.tree ul{list-style:none;margin:0;padding-left:20px;border-left:1px solid var(--line);margin-left:6px}
+.tree li{padding:5px 0;overflow-wrap:anywhere}
+.tree .f{font-weight:600}
+.tree .k{margin-left:6px}
+
+@media (max-width:760px){
+  .app{grid-template-columns:1fr}
+  .side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px 10px}
+  .nav{flex-direction:row;overflow-x:auto;gap:4px}
+  .nav a{white-space:nowrap;border-left:0;border-bottom:3px solid transparent;border-radius:6px 6px 0 0}
+  .nav a[aria-current="page"]{border-bottom-color:var(--accent)}
+  .nav small{display:none}
+  .main{padding:20px 16px 48px}
+  h1{font-size:22px}
+}
+@media (prefers-reduced-motion:reduce){details.acc>summary::after{transition:none}}
+</style>
+
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="brand"><span class="eyebrow">Проект</span><b>Давидян и партнёры</b><span class="muted">Найм, адаптация, увольнение</span></div>
+  <nav class="nav" id="nav" aria-label="Блоки">
+    <a href="#itogi">Итоги <small>0</small></a>
+    <a href="#messages">Сообщения <small>1</small></a>
+    <a href="#summary">Управленческая сводка <small>2</small></a>
+    <a href="#files">Папка и материалы <small>3</small></a>
+    <a href="#flags">Что не сходится <small>4</small><span class="badge" id="flag-badge">3</span></a>
+  </nav>
+  <p class="muted" style="padding:0 8px">Статус на 6 октября 2026</p>
+</aside>
+
+<main class="main">
+
+<!-- 0. ИТОГИ -->
+<section class="view" id="itogi" hidden>
+  <div class="head">
+    <span class="eyebrow">Итоги</span>
+    <h1>Где проект и что делать дальше</h1>
+    <div class="row"><span class="pill warn">Пауза 7 дней после Zoom 29.09</span><span class="pill warn">Черновик не проверен</span><span class="pill bad">Сроков и владельца нет</span></div>
+  </div>
+  <div class="panel pad lead">
+    <p>28 и 29 сентября прошли два Zoom с Юрием. Из них собран черновик регламента приёма и увольнения сотрудников. Светлана и старшие юристы его ещё не видели, итог Юрию не отправлен, сроков нет.</p>
+  </div>
+
+  <h2>Этапы</h2>
+  <div class="steps">
+    <div class="step ok"><b>Сбор практики</b><span class="pill ok">Сделано</span></div>
+    <div class="step warn"><b>Черновик v0</b><span class="pill warn">Не проверен</span></div>
+    <div class="step"><b>Сверка со Светланой</b><span class="pill idle">Не начато</span></div>
+    <div class="step"><b>Зум со старшими</b><span class="pill idle">Нет даты</span></div>
+    <div class="step"><b>Версия 1.0</b><span class="pill idle">Ждёт</span></div>
+    <div class="step"><b>Тест на найме</b><span class="pill idle">Ждёт</span></div>
+  </div>
+
+  <h2>Что делать дальше</h2>
+  <div class="panel">
+    <details class="acc"><summary><span class="t">1. Отправить Юрию итог и три вопроса <span class="pill bad">Просрочено</span></span></summary>
+      <div class="body"><p>Итог после Zoom 29.09 не отправлен неделю. В письме три вопроса: кто владелец базы знаний, срок отключения доступов, дата и состав зума со старшими.</p><a class="go" href="#messages">Перейти к тексту →</a></div></details>
+    <details class="acc"><summary><span class="t">2. Отправить Светлане запрос на сверку <span class="pill warn">После Юрия или в тот же день</span></span></summary>
+      <div class="body"><p>Приложите только её чек-лист, а не весь черновик: в нём решения Юрия, которые он ещё не утвердил.</p><a class="go" href="#messages">Перейти к тексту →</a></div></details>
+    <details class="acc"><summary><span class="t">3. В общий чат юристов пока не писать <span class="pill idle">Не отправлять</span></span></summary>
+      <div class="body"><p>У Юрия нет даты и состава зума, а вопросы из черновика адресованы старшим и Светлане, не всей команде.</p><a class="go" href="#messages">Причины и заготовка →</a></div></details>
+    <details class="acc"><summary><span class="t">4. Получить от Юрия решения, которых нет <span class="pill warn">Ждём Юрия</span></span></summary>
+      <div class="body"><p>Не решено: владелец базы знаний, срок отключения доступов, критерии перехода между этапами, кто отменяет доверенности клиентов.</p><a class="go" href="#summary">Все решения и задачи →</a></div></details>
+    <details class="acc"><summary><span class="t">5. Выгрузить чат Claude из аккаунта Юрия и сверить черновик <span class="pill warn">Нужно</span></span></summary>
+      <div class="body"><p>Запись Zoom 29.09 плохая, а настоящий источник ответов Юрия лежит в его чате с Claude. В папке его нет.</p><a class="go" href="#flags">Что именно не сходится →</a></div></details>
+    <details class="acc"><summary><span class="t">6. Привести папку в порядок <span class="pill warn">Частично</span></span></summary>
+      <div class="body"><p>Структура уже чистая: три папки без дублей. Но сводка 00_ИТОГ описывает прежнюю структуру, а аудио с вашим заданием лежит среди материалов проекта.</p><a class="go" href="#files">Состояние папки →</a></div></details>
+  </div>
+  <div class="panel pad"><b>Ваше решение:</b> в версию 1.0 берём только то, что Юрий сказал прямо. Остальное остаётся вопросами.</div>
+</section>
+
+<!-- 1. СООБЩЕНИЯ -->
+<section class="view" id="messages" hidden>
+  <div class="head">
+    <span class="eyebrow">Блок 1</span>
+    <h1>Сообщения после Zoom 29.09</h1>
+    <p class="muted">Отправляются вручную, у меня нет доступа. Тексты рассчитаны на отправку сегодня, спустя неделю после встречи.</p>
+  </div>
+  <div class="panel">
+    <details class="acc" open><summary><span class="t"><b>Юрию</b> <span class="pill ok">Отправить сегодня</span></span></summary>
+      <div class="body">
+        <p class="muted">Итог встречи плюс три вопроса, на которые нужен ответ.</p>
+        <pre id="m-y">Юрий, добрый день!
+
+Возвращаюсь к нашей встрече 29 сентября. По приёму, адаптации и увольнению у нас есть рабочий черновик: этапы, роли ваши, Светланы и старших юристов, доступы, Jeffit, передача дел. Это пока версия с ваших слов, утверждённой я её не считаю.
+
+Дальше я сверяю организационную часть со Светланой и отдельно собираю старших юристов. После этого соберу версию 1.0.
+
+Чтобы двигаться, мне нужны три ответа:
+
+1. Кто в бюро отвечает за адаптацию новичков и за актуальность базы знаний. Вы отложили этот вопрос 28 сентября, на встрече 29-го мы к нему не вернулись.
+2. Через какой срок после увольнения отключаем почту, Jeffit, Claude и чаты. Вы говорили «в течение месяца» и что это нужно обдумать. Фиксируем 30 дней или другой срок?
+3. Когда провести зум со старшими юристами и кого звать: всех старших или часть? Предлагаю отдельное время, не пятничный зум: там бывает меньше половины группы и присутствуют младшие юристы.
+
+Ответьте, пожалуйста, одним сообщением.</pre>
+        <button class="copy" data-for="m-y">Скопировать</button>
+      </div></details>
+    <details class="acc"><summary><span class="t"><b>Светлане</b> <span class="pill ok">После Юрия или в тот же день</span></span></summary>
+      <div class="body">
+        <p class="muted">Запрос на проверку организационной части. Приложить только раздел «Чек-лист Светланы» из черновика.</p>
+        <pre id="m-s">Светлана, добрый день!
+
+Мы с Юрием собрали черновик порядка приёма и увольнения сотрудников. Мне нужна ваша проверка организационной части, чтобы записать, как всё устроено на самом деле, без догадок. Присылаю чек-лист: техника, документы и бухгалтер, ключи и вход в офис, первый день, возврат ключей и техники при увольнении.
+
+Хочу уточнить:
+— какие документы оформляются, кроме приказа и договора;
+— что новички чаще всего спрашивают в первые дни;
+— какие проблемы бывали с техникой, ключами и входом в почту;
+— у кого лежат оригиналы PDF правил документооборота и инструкции по Jeffit и актуальная выгрузка сообщений «важно» из чата.
+
+Можно ответить текстом или коротко созвониться на 20–30 минут. Скажите, когда вам удобно.</pre>
+        <button class="copy" data-for="m-s">Скопировать</button>
+      </div></details>
+    <details class="acc"><summary><span class="t"><b>Общий чат юристов</b> <span class="pill warn">Сейчас не отправлять</span></span></summary>
+      <div class="body">
+        <p><b>Почему не сейчас.</b> Юрий не назвал состав и дату зума, анонс без даты ничего не даёт. Вопросы из черновика рассчитаны на старших юристов и Светлану. В общем чате они превратятся в разрозненные комментарии раньше, чем проверена базовая версия. Старые материалы с устаревшими суммами тоже туда попадут.</p>
+        <p class="muted">На Zoom 29.09 вы говорили Юрию, что напишете в общий чат. Это не отменяет совета: напишите, когда Юрий подтвердит дату.</p>
+        <p class="muted">Заготовка на потом:</p>
+        <pre id="m-c">Коллеги, добрый день!
+
+Собираем единый порядок адаптации новых сотрудников и передачи дел при увольнении. Для этого проведём отдельный зум со старшими юристами: разберём типичные ошибки новичков, критерии готовности к самостоятельной работе, работу в Jeffit и передачу дел. Время и ссылку пришлю отдельно. По итогам обновим регламент и чек-листы.</pre>
+        <button class="copy" data-for="m-c">Скопировать заготовку</button>
+      </div></details>
+  </div>
+</section>
+
+<!-- 2. СВОДКА -->
+<section class="view" id="summary" hidden>
+  <div class="head">
+    <span class="eyebrow">Блок 2</span>
+    <h1>Управленческая сводка</h1>
+    <p class="muted">Статус, что решено, кто что делает, от кого что ждём. Раскройте строку, чтобы увидеть основание.</p>
+  </div>
+  <div class="panel pad lead"><p><b>Статус.</b> Процесс собран со слов Юрия, черновик существует, но не проверен Светланой и старшими юристами. Сроков на встречах не называли, ничего не отправлено после 29.09, владельца базы знаний нет.</p></div>
+
+  <h2>Что решено</h2>
+  <div class="panel">
+    <details class="acc"><summary><span class="t">Подход: сначала интервью, потом регламенты <span class="pill ok">Решено</span></span></summary><div class="body"><p>Групповой Zoom со старшими юристами, отдельно Светлана, затем Юрий. Регламенты оформляются по итогам интервью.</p><p class="muted">Источник: переписка 28.09; Zoom 28.09.</p></div></details>
+    <details class="acc"><summary><span class="t">Адаптация: 3 месяца испытательный + 3 месяца самостоятельной работы <span class="pill ok">Решено</span></span></summary><div class="body"><p>Юрий описал модель сам. После каждого этапа решает он, по отзывам старших юристов.</p><p class="muted">Источник: Zoom 29.09, 32:00–34:30.</p></div></details>
+    <details class="acc"><summary><span class="t">Порядок передачи дел при увольнении <span class="pill ok">Решено</span></span></summary><div class="body"><p>Юрий сообщает старшему юристу; тот с сотрудником составляет таблицу дел и дат; дела распределяются; часы вносятся в Jeffit; забираются ключи и доверенности.</p><p class="muted">Источник: Zoom 29.09, 41:00–45:30.</p></div></details>
+    <details class="acc"><summary><span class="t">Claude для новичка <span class="pill ok">Решено</span></span></summary><div class="body"><p>Нужен ли Claude, решает Юрий. Настраивает Дмитрий.</p><p class="muted">Источник: Zoom 29.09, 26:00 и 29:55.</p></div></details>
+    <details class="acc"><summary><span class="t">Не повышать тариф Claude всем сразу <span class="pill ok">Решено</span></span></summary><div class="body"><p>Сначала анализ реального расхода лимитов. Юрий согласился.</p><p class="muted">Источник: Zoom 28.09, 05:57.</p></div></details>
+  </div>
+
+  <h2>Что не решено или спорно</h2>
+  <div class="panel">
+    <details class="acc"><summary><span class="t">Срок отключения доступов уволенного <span class="pill warn">Только мнение</span></span></summary><div class="body"><p>Юрий сказал «думаю, в течение месяца» и раньше «надо подумать, не могу сказать точно». В черновике это записано как правило «не позже 30 дней».</p><p class="muted">Источник: Zoom 29.09, 42:06 и 43:20.</p></div></details>
+    <details class="acc"><summary><span class="t">Формат базы знаний: NotebookLM, тесты, видео <span class="pill warn">Обсуждали</span></span></summary><div class="body"><p>Юрию идея понравилась, решения нет. Сначала нужны утверждённые тексты.</p><p class="muted">Источник: Zoom 28.09, 06:05–07:20.</p></div></details>
+    <details class="acc"><summary><span class="t">Кто отвечает за адаптацию и базу знаний <span class="pill bad">Не решено</span></span></summary><div class="body"><p>Юрий отложил вопрос на 29.09, но на встрече 29.09 к нему не вернулись. Нового кандидата в помощники не рассматривают, пока он не принят.</p><p class="muted">Источник: Zoom 28.09, 24:30–25:15.</p></div></details>
+    <details class="acc"><summary><span class="t">Критерии перехода между этапами <span class="pill bad">Не решено</span></span></summary><div class="body"><p>Сейчас это личная оценка Юрия по отзывам старших. Чек-лист предлагал Дмитрий, договорённости нет.</p><p class="muted">Источник: Zoom 28.09; Zoom 29.09, 13:20.</p></div></details>
+    <details class="acc"><summary><span class="t">Кто отменяет доверенности клиентов при увольнении <span class="pill bad">Не решено</span></span></summary><div class="body"><p>Вопрос задал Claude, ответ в записи не разобрать.</p><p class="muted">Источник: Zoom 29.09, 46:30.</p></div></details>
+  </div>
+
+  <h2>Задачи и сроки</h2>
+  <p class="muted">Сроки на встречах не называли. Отметки хранятся только в вашем браузере.</p>
+  <div class="panel" id="tasks"></div>
+
+  <h2>Ждём от других</h2>
+  <div class="cols">
+    <div class="panel card"><h3>Юрий</h3><ul><li>Владелец базы знаний</li><li>Срок отключения доступов</li><li>Дата и состав зума со старшими</li><li>Проверка договора провайдера анонимизации</li></ul></div>
+    <div class="panel card"><h3>Светлана</h3><ul><li>Проверка чек-листа</li><li>Документы при приёме и увольнении</li><li>Оригиналы PDF и выгрузка «важных» сообщений</li></ul></div>
+    <div class="panel card"><h3>Старшие юристы</h3><ul><li>Типовые ошибки новичков</li><li>Критерии готовности</li><li>Шаблон таблицы дел</li><li>Как проверять часы в Jeffit</li></ul></div>
+  </div>
+
+  <h2>Параллельные треки</h2>
+  <div class="panel">
+    <details class="acc"><summary><span class="t">Лимиты Claude <span class="pill warn">Анализ не завершён</span></span></summary><div class="body"><p>У Филиппа стандартного тарифа не хватает, с тарифом выше всё хорошо. Запросы были также у Татьяны и Никиты Куприянова. Гипотезы Дмитрия: много работы, большие PDF через код, лишний контекст, с 14.09 убрали бонус на Cowork. Решение: сначала анализ, потом тариф.</p></div></details>
+    <details class="acc"><summary><span class="t">Анонимизация документов <span class="pill warn">Ждём провайдеров</span></span></summary><div class="body"><p>Запросы ушли 7 провайдерам. Дальше таблица сравнения, юридическая проверка договора и выбор в бюро, подключение, тест через локальный доступ. В материалах нет сведений, пришли ли ответы.</p></div></details>
+    <details class="acc"><summary><span class="t">Обучение и база знаний по ИИ <span class="pill ok">Идёт</span></span></summary><div class="body"><p>Еженедельные зумы продолжаются (обычно пятница 15:00). Общий реестр скиллов сделан. На зумах бывает 40–50% группы, поэтому для пропустивших предложен NotebookLM.</p></div></details>
+    <details class="acc"><summary><span class="t">Помощник 17 лет <span class="pill idle">К сведению</span></span></summary><div class="body"><p>Приходит на общественных началах, в основные процессы не включается. Юрий понаблюдает и отметит, что из онбординга применимо.</p></div></details>
+  </div>
+</section>
+
+<!-- 3. ПАПКА -->
+<section class="view" id="files" hidden>
+  <div class="head">
+    <span class="eyebrow">Блок 3</span>
+    <h1>Папка и материалы</h1>
+    <p class="muted">Актуально на 6 октября 2026, 09:20. Структура проверена по Google Диску.</p>
+  </div>
+  <div class="panel pad lead"><p><b>Итог.</b> В папке три раздела без дублей: итог, исходники, рабочие материалы. Всего 7 файлов. Исходники не менялись.</p></div>
+
+  <h2>Структура</h2>
+  <div class="panel pad">
+    <ul class="tree">
+      <li><span class="f"><a href="https://drive.google.com/drive/folders/1_Ju4krys4qmiAnqICFc46IvXai61H27B" target="_blank" rel="noopener">Папка проекта</a></span>
+        <ul>
+          <li><span class="f"><a href="https://drive.google.com/drive/folders/1gCV-QejRk-PF-y-aO3WAksWPykrYJt0e" target="_blank" rel="noopener">00_ИТОГ</a></span> <span class="pill info k">Итог</span>
+            <ul><li><a href="https://docs.google.com/document/d/1v3bjNeepJfXu2NHzhraGftcv80CloAKKJcjt4-CPmsk/edit" target="_blank" rel="noopener">00_ИТОГ_Давидян и партнёры_29.09.2026</a></li></ul></li>
+          <li><span class="f"><a href="https://drive.google.com/drive/folders/1dSrxyQgoIAJInYtfCWcTVJgrf6mBVLEH" target="_blank" rel="noopener">01_ИСХОДНИКИ</a></span> <span class="pill ok k">Исходники, не править</span>
+            <ul>
+              <li><a href="https://drive.google.com/file/d/19BcWn0X0kV1yqfVPermvo62ptyNRA0NN/view" target="_blank" rel="noopener">Контекст проекта.docx</a></li>
+              <li><a href="https://drive.google.com/file/d/1Z6Pzvskd2GwvZ-gmBEI4uxIxekqadlWQ/view" target="_blank" rel="noopener">Переписка с Юрием 28-29.09.docx</a></li>
+              <li><a href="https://drive.google.com/file/d/13HQ7c-JHSeETgY9Y8sf0Dtx8bpPB_lKg/view" target="_blank" rel="noopener">Zoom_Davidyan_2026-09-28_Deepgram.md</a></li>
+              <li><a href="https://drive.google.com/file/d/12R1E7bcc8TzR0N4l4kfgNpKbKloRCiRY/view" target="_blank" rel="noopener">GMT20260929-052223_Recording.transcript.vtt</a></li>
+              <li><a href="https://drive.google.com/file/d/1Nk0KNk3DFBp2oy4t6SezD3Ch9-Dv1ljz/view" target="_blank" rel="noopener">Задание ассистенту.m4a</a></li>
+            </ul></li>
+          <li><span class="f"><a href="https://drive.google.com/drive/folders/1avKFgW6FlT7KCH3w884zv9XO4yCE5bwv" target="_blank" rel="noopener">02_РАБОЧИЕ_МАТЕРИАЛЫ</a></span> <span class="pill warn k">Черновик</span>
+            <ul><li><a href="https://drive.google.com/file/d/1ZXy-GsrIEb72xvuItOI4w3cLFTGxDULf/view" target="_blank" rel="noopener">Приём и увольнение сотрудников — регламенты (черновик).docx</a></li></ul></li>
+        </ul></li>
+    </ul>
+  </div>
+
+  <h2>Что чему верить</h2>
+  <div class="panel">
+    <details class="acc"><summary><span class="t">Исходники <span class="pill ok">Доказательная база</span></span></summary>
+      <div class="body"><p>Zoom 28.09 записан хорошо. Zoom 29.09 это автосубтитры с ошибками, фрагмент об увольнении почти нечитаем. Переписка и контекст короткие и надёжные.</p><p class="muted">«Задание ассистенту.m4a» это задание владельца, а не материал проекта.</p></div></details>
+    <details class="acc"><summary><span class="t">Черновик регламента <span class="pill warn">Не утверждён</span></span></summary>
+      <div class="body"><p>Собран Claude в аккаунте Юрия со слов Юрия. Содержит пункты, которых нет в записях (см. «Что не сходится»). Единственная копия в папке — .docx.</p></div></details>
+    <details class="acc"><summary><span class="t">00_ИТОГ <span class="pill warn">Частично устарел</span></span></summary>
+      <div class="body"><p>Выводы по статусу и рискам совпадают с этим дашбордом. Раздел «Где лежат материалы» описывает прежнюю структуру: документ назван «в корне», упомянута папка 99_ПРЕДЫДУЩИЕ_ВЕРСИИ, которой больше нет. Его нужно обновить.</p></div></details>
+  </div>
+
+  <h2>Что рекомендую сделать с папкой</h2>
+  <div class="panel pad">
+    <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14px">
+      <li>Перенести «Задание ассистенту.m4a» из исходников проекта в 00_ИТОГ или отдельную папку «Задание».</li>
+      <li>Обновить раздел «Где лежат материалы» в 00_ИТОГ или заменить документ этим дашбордом.</li>
+      <li>Добавить номера файлов (01_, 02_ …), чтобы порядок читался с первого взгляда. Я переименовывать не стал, чтобы не трогать исходники.</li>
+      <li>Когда придёт выгрузка чата Claude из аккаунта Юрия, положить её в 01_ИСХОДНИКИ.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 4. ПРОВЕРКА -->
+<section class="view" id="flags" hidden>
+  <div class="head">
+    <span class="eyebrow">Блок 4</span>
+    <h1>Что не сходится и что нельзя подтвердить</h1>
+    <p class="muted">Места, где черновик говорит увереннее, чем записи встреч. Читать до того, как отдавать черновик кому-либо.</p>
+  </div>
+  <div class="panel pad lead bad"><p><b>Главное.</b> Три пункта черновика нельзя считать фактами: подтверждение Юрия, правило «30 дней» и суммы в «Пакете новичка».</p></div>
+  <div class="panel">
+    <details class="acc"><summary><span class="t">«Юрий проверил и подтвердил содержание» <span class="pill bad">Важно</span></span></summary>
+      <div class="body"><p><b>Основание.</b> Так написано в самом черновике. В записи Юрий отвечает на вопросы Claude, итоговый текст не читает: около 50-й минуты приходит клиент и он уходит.</p><p><b>Что делать.</b> Считать черновик версией «со слов Юрия» и показать ему целиком.</p></div></details>
+    <details class="acc"><summary><span class="t">Правило «30 дней» и «напоминание на +30 дней» <span class="pill bad">Важно</span></span></summary>
+      <div class="body"><p><b>Основание.</b> Юрий назвал срок «в течение месяца» как мнение и сказал, что надо подумать. Про напоминание в записи ничего нет, его предложил Claude.</p><p><b>Что делать.</b> Не переносить в регламент без ответа Юрия.</p></div></details>
+    <details class="acc"><summary><span class="t">Суммы и фамилии в «Пакете новичка» <span class="pill bad">Важно</span></span></summary>
+      <div class="body"><p><b>Основание.</b> Премии и штрафы (1500, 2000, 250, 150, 100 ₽), ставки (ЮО 1500, АО 1050 ₽) и закрепление клиентов за людьми есть только в черновике. В транскриптах названы лишь «2018–2019», «премии, штрафы, ставки» без цифр. Скриншотов в папке нет.</p><p><b>Что делать.</b> Запросить оригиналы PDF и сверить цифры.</p></div></details>
+    <details class="acc"><summary><span class="t">Доступы: до выхода или через 3 месяца <span class="pill warn">Противоречие</span></span></summary>
+      <div class="body"><p><b>Основание.</b> На 22–23 мин Юрий говорит создать Jeffit и почту до выхода, на 32–35 мин что первые три месяца доступов нет. Черновик взял второе.</p><p><b>Что делать.</b> Уточнить, как новичок общается с клиентами без рабочей почты.</p></div></details>
+    <details class="acc"><summary><span class="t">Запись Zoom 29.09 плохого качества <span class="pill warn">Пробел</span></span></summary>
+      <div class="body"><p><b>Основание.</b> Автосубтитры с ошибками. Фрагмент 40–49 мин (увольнение, доверенности) почти не читается. Настоящий источник ответов Юрия — чат в его аккаунте Claude.</p><p><b>Что делать.</b> Выгрузить этот чат и сверить с черновиком.</p></div></details>
+    <details class="acc"><summary><span class="t">Вопрос о владельце базы знаний не обсуждали <span class="pill warn">Пробел</span></span></summary>
+      <div class="body"><p><b>Основание.</b> 28.09 сказано, что 29.09 начнём с него. Встреча сразу ушла в заполнение регламента.</p><p><b>Что делать.</b> Поставить первым вопросом в письме Юрию.</p></div></details>
+    <details class="acc"><summary><span class="t">Название системы «Jeffit» <span class="pill idle">Мелочь</span></span></summary>
+      <div class="body"><p><b>Основание.</b> В записях встречаются «джеффит», «JFT», «джейфти». Написание в черновике не подтверждено.</p><p><b>Что делать.</b> Уточнить у Светланы.</p></div></details>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+(function(){
+var TASKS=[
+ ["t1","Отправить Юрию итог и три вопроса","Дмитрий","Просрочено","bad"],
+ ["t2","Отправить Светлане запрос на сверку","Дмитрий","Не начато","warn"],
+ ["t3","Назвать владельца адаптации и базы знаний","Юрий","Ждём Юрия","warn"],
+ ["t4","Назвать срок отключения доступов","Юрий","Ждём Юрия","warn"],
+ ["t5","Назначить дату и состав зума со старшими","Юрий","Ждём Юрия","warn"],
+ ["t6","Проверить чек-лист; найти оригиналы PDF и выгрузку «важных» сообщений","Светлана","Не запрошено","warn"],
+ ["t7","Зум со старшими: ошибки новичков, критерии, таблица дел, часы в Jeffit","Дмитрий и старшие юристы","Ждёт даты","warn"],
+ ["t8","Интервью с недавно принятой сотрудницей","Дмитрий","Не начато","warn"],
+ ["t9","Выгрузить из аккаунта Юрия чат с Claude, где заполнялся черновик","Дмитрий","Не начато","warn"],
+ ["t10","Собрать версию 1.0: подтверждённое отдельно от гипотез","Дмитрий","После сверок","idle"],
+ ["t11","Анонимизация: ответы провайдеров, таблица, проверка договора","Дмитрий, затем Юрий","Ждём провайдеров","warn"],
+ ["t12","Лимиты Claude: анализ у Филиппа, Татьяны, Никиты Куприянова","Дмитрий","Нужен статус","warn"],
+ ["t13","Проверить, оплачен ли счёт, отправленный Юрием 28.09","Дмитрий","Проверить","info"]
+];
+var store={get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function renderTasks(){
+  var host=document.getElementById("tasks");host.innerHTML="";
+  TASKS.forEach(function(t){
+    var done=store.get("done-"+t[0])==="1";
+    var row=document.createElement("div");row.className="task"+(done?" done":"");
+    var cb=document.createElement("input");cb.type="checkbox";cb.id="cb-"+t[0];cb.checked=done;
+    var lb=document.createElement("label");lb.htmlFor=cb.id;
+    lb.innerHTML=esc(t[1])+"<div class='who'>"+esc(t[2])+" · <span class='pill "+t[4]+"'>"+esc(t[3])+"</span></div>";
+    cb.addEventListener("change",function(){store.set("done-"+t[0],cb.checked?"1":"0");renderTasks()});
+    row.appendChild(cb);row.appendChild(lb);host.appendChild(row);
+  });
+}
+var views=["itogi","messages","summary","files","flags"];
+function route(){
+  var h=(location.hash||"").replace("#","");
+  if(views.indexOf(h)<0)h="itogi";
+  views.forEach(function(v){document.getElementById(v).hidden=v!==h});
+  [].forEach.call(document.querySelectorAll("#nav a"),function(a){
+    if(a.getAttribute("href")==="#"+h)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");
+  });
+  window.scrollTo(0,0);
+}
+window.addEventListener("hashchange",route);
+[].forEach.call(document.querySelectorAll(".copy"),function(b){
+  b.addEventListener("click",function(){
+    var el=document.getElementById(b.getAttribute("data-for"));
+    function sel(){var r=document.createRange();r.selectNodeContents(el);var s=window.getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Выделено, нажмите Ctrl+C";}
+    try{navigator.clipboard.writeText(el.textContent).then(function(){var o=b.textContent;b.textContent="Скопировано";setTimeout(function(){b.textContent=o},1800)},sel)}catch(e){sel()}
+  });
+});
+renderTasks();route();
+})();
+</script>
+
+</body>
+</html>
